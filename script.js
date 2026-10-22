@@ -128,7 +128,7 @@ if (registrationForm && checkout) {
 
     try {
       const response = await fetch(
-        "http://localhost:5000/api/registrations",
+        "https://lori-s-timeline.onrender.com/api/registrations",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -190,7 +190,7 @@ if (!registrationId || !result.paymentReference) {
 
     try {
       const response = await fetch(
-        `http://localhost:5000/api/registrations/${encodeURIComponent(registrationId)}/simulate-payment`,
+        `https://lori-s-timeline.onrender.com/api/registrations/${encodeURIComponent(registrationId)}/simulate-payment`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
