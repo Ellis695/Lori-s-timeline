@@ -311,46 +311,57 @@ h3 {
     }
 }
 
-/* Mobile-first navigation and form refinements */
+/* Responsive refinements that preserve the original minimalist design */
 html{scroll-padding-top:18px}
 button,.btn,input,select,textarea{-webkit-tap-highlight-color:transparent}
 button,.btn{min-height:44px}
 .field input,.field select,.field textarea{font-size:16px}
+
 @media(max-width:760px){
   .wrap{width:calc(100% - 32px)}
-  .nav{align-items:flex-start;flex-direction:column;gap:12px;padding:16px 0}
-  .brand{font-size:22px}
-  .navlinks{display:flex;width:100%;gap:8px;flex-wrap:wrap;align-items:center;font-size:13px}
-  .navlinks a:not(.btn){display:inline-flex;align-items:center;justify-content:center;padding:9px 11px;border:1px solid var(--line);border-radius:999px;background:#fff;min-height:40px}
-  .navlinks .btn{margin-left:auto;padding:10px 14px;font-size:12px;white-space:nowrap}
-  .hero{padding:44px 0 48px;border-radius:0 0 24px 24px}
-  h1{font-size:clamp(36px,9vw,54px);line-height:1.08}
+  .nav{flex-direction:row;align-items:center;justify-content:space-between;gap:12px;padding:17px 0}
+  .brand{font-size:21px;white-space:nowrap}
+  .navlinks{width:auto;display:flex;flex-wrap:wrap;justify-content:flex-end;gap:6px 14px;font-size:12px}
+  .navlinks a:not(.btn){display:inline;color:var(--ink);padding:4px 0;border:0;background:transparent;min-height:0}
+  .navlinks .btn{padding:9px 13px;font-size:12px;white-space:nowrap;margin:0}
+  .hero{padding:52px 0 58px;border-radius:0 0 26px 26px}
+  h1{font-size:clamp(38px,8vw,56px);line-height:1.08}
   .lead{font-size:16px;line-height:1.65}
-  .actions{display:grid;grid-template-columns:1fr;gap:10px;margin-top:22px}
-  .actions .btn{width:100%;min-height:48px}
-  .section{padding:44px 0}
-  .sectionhead{margin-bottom:22px}
-  h2{font-size:clamp(28px,7vw,38px);line-height:1.15}
-  .grid{grid-template-columns:minmax(0,1fr);gap:14px}
-  .card{padding:20px;border-radius:16px;min-width:0}
-  .card .btn{width:100%;white-space:normal;text-align:center}
+  .actions{gap:10px;margin-top:22px}
+  .actions .btn{min-height:46px}
+  .section{padding:50px 0}
+  .sectionhead{margin-bottom:24px}
+  h2{font-size:clamp(29px,6.8vw,38px);line-height:1.15}
+  .grid{grid-template-columns:1fr;gap:14px}
+  .card{padding:21px;border-radius:17px;min-width:0}
+  .card .btn{max-width:100%;white-space:normal;text-align:center}
   .steps{gap:8px}
-  .step{padding:14px 4px}
+  .step{padding:15px 4px}
   .step h3{font-size:20px}
-  .formbox{width:100%;margin:24px auto;padding:20px 16px;border-radius:18px}
+  .formbox{width:100%;margin:26px auto;padding:22px 17px;border-radius:18px}
   .field{margin:14px 0}
   .field input,.field select,.field textarea{padding:13px 12px;min-height:46px;border-radius:10px}
   .formbox>.btn,.formbox button.btn{width:100%;white-space:normal}
-  .notice{padding:12px;font-size:13px;overflow-wrap:anywhere}
-  .footer{padding:24px 0}
+  .notice{padding:13px 14px;font-size:13px;overflow-wrap:anywhere}
+  .footer{padding:25px 0}
 }
-@media(max-width:390px){
+@media(max-width:520px){
+  .nav{align-items:flex-start;flex-direction:column;gap:12px;padding:15px 0}
+  .navlinks{width:100%;justify-content:flex-start;gap:7px 15px}
+  .navlinks a:not(.btn){font-size:12px}
+  .navlinks .btn{margin-left:auto}
+  .hero{padding:42px 0 46px}
+  .actions{display:flex;flex-direction:column;align-items:stretch}
+  .actions .btn{width:100%}
+  .section{padding:43px 0}
+  .card{padding:18px}
+  .formbox{padding:20px 15px}
+}
+@media(max-width:360px){
   .wrap{width:calc(100% - 24px)}
-  .navlinks{gap:6px}
-  .navlinks a:not(.btn){font-size:12px;padding:8px 9px}
+  .navlinks{gap:8px 12px}
   .navlinks .btn{width:100%;margin-left:0}
-  .hero{padding-top:36px}
-  .card{padding:16px}
+  h1{font-size:36px}
   .formbox{padding:18px 13px}
 }
 
