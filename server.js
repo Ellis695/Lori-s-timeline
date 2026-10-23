@@ -47,10 +47,11 @@ app.post("/api/contact", async (req, res) => {
   const cleanEmail = typeof email === "string" ? email.trim() : "";
   const cleanProject = typeof project === "string" ? project.trim() : "";
   const cleanDetails = typeof details === "string" ? details.trim() : "";
+  const detailsWordCount = cleanDetails.split(/\\s+/).filter(Boolean).length;
 
   if (!cleanName || cleanName.length > 120 ||
       !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail) || cleanEmail.length > 254 ||
-      !cleanProject || cleanProject.length > 120 || cleanDetails.length > 5000) {
+      !cleanProject || cleanProject.length > 120 || detailsWordCount < 20 || cleanDetails.length > 5000) {
     return res.status(400).json({ message: "Please check your details and try again." });
   }
 
