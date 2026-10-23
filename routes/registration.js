@@ -375,7 +375,58 @@ Lori's Timeline`,
   }
 });
 
-// The old public payment-simulation endpoint has been removed.
- // Payment status changes are now handled by the authenticated admin API.
+// Development-only simulation: emails a clearly labelled demo notice.
+// It never changes the registration status or claims real payment was verified.
+router.post("/:id/simulate-payment", async (req, res) => {
+  const { outcome } = req.body || {};
+  if (!["success", "failed", "abandoned"].includes(outcome)) {
+    return res.status(400).json({ message: "Choose a valid simulation outcome." });
+  }
+
+  try {
+    const registration = await Registration.findById(req.params.id);
+    if (!registration) {
+      return res.status(404).json({ message: "Registration not found. Please register again." });
+    }
+
+    const subject = outcome === "success"
+      ? "DEMO ONLY: Simulated payment result — Lori's Timeline"
+      : "DEMO ONLY: Checkout simulation result — Lori's Timeline";
+    const message = outcome === "success"
+      ? `Hello ${registration.name},
+
+This is a TEST EMAIL from Lori's Timeline.
+
+You selected “Simulate successful payment” on the website. This was only a demonstration: no money was charged, your registration is still pending, and no real payment has been verified. You are NOT enrolled yet.
+
+Your registration reference: ${registration.paymentReference}
+
+Lori's Timeline Team`
+      : `Hello ${registration.name},
+
+This is a TEST EMAIL from Lori's Timeline.
+
+You selected the “${outcome === "failed" ? "Simulate failed payment" : "Close checkout"}” demo option. No money was charged and your registration remains pending.
+
+Your registration reference: ${registration.paymentReference}
+
+Lori's Timeline Team`;
+
+    await emailTransporter.sendMail({
+      from: process.env.EMAIL_USER,
+      to: registration.email,
+      subject,
+      text: message,
+    });
+
+    return res.json({ message: "Demo email sent.", emailSent: true, demoOnly: true });
+  } catch (error) {
+    console.error("Demo payment email failed:", error.message);
+    return res.status(502).json({
+      message: "The demo email could not be sent. Check the backend email configuration and logs.",
+      emailSent: false,
+    });
+  }
+});
  
 module.exports = router;
