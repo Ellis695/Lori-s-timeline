@@ -226,7 +226,10 @@ if (registrationForm && checkout) {
         }
       );
 
-   const result = await response.json();
+   const contentType = response.headers.get("content-type") || "";
+   const result = contentType.includes("application/json")
+     ? await response.json()
+     : { message: "The registration server returned an unexpected response. Please try again later." };
 
 console.log("Registration API response:", response.status, result);
 
@@ -262,86 +265,6 @@ if (!registrationId || !result.paymentReference) {
         setFormLocked(registrationForm, false);
       }
     }
-  });
-
-  async function simulatePayment(outcome) {
-    if (!registrationId || paymentInProgress) return;
-
-    paymentInProgress = true;
-
-    const buttons = [
-      document.getElementById("simulate-success"),
-      document.getElementById("simulate-failure"),
-      document.getElementById("simulate-abandon"),
-    ];
-
-    buttons.forEach((button) => {
-      button.disabled = true;
-    });
-
-    resultBox.hidden = false;
-    resultTitle.textContent = "Processing...";
-    resultMessage.textContent = "Please wait.";
-
-    try {
-      const response = await fetch(
-        `https://lori-s-timeline.onrender.com/api/registrations/${encodeURIComponent(registrationId)}/simulate-payment`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ outcome }),
-        }
-      );
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.message || "Payment simulation failed.");
-      }
-
-      if (outcome === "success") {
-        resultTitle.textContent = "Payment confirmed";
-        resultMessage.textContent =
-          "You're enrolled for the February 2027 cohort. A confirmation email and onboarding details are on the way.";
-      } else if (outcome === "failed") {
-        resultTitle.textContent = "Payment failed";
-        resultMessage.textContent =
-          "You have not been enrolled. Please try again.";
-      } else {
-        resultTitle.textContent = "Checkout not completed";
-        resultMessage.textContent =
-          "Your place isn't reserved yet. You can resume payment any time.";
-      }
-
-      if (result.emailSent === false && outcome === "success") {
-        resultMessage.textContent +=
-          " However, the confirmation email could not be sent. Please check the server logs.";
-      }
-    } catch (error) {
-      resultTitle.textContent = "Something went wrong";
-      resultMessage.textContent = error.message;
-    } finally {
-      paymentInProgress = false;
-
-      // Prevent repeated outcome clicks after the server records a result.
-      if (resultTitle.textContent !== "Something went wrong") {
-        buttons.forEach((button) => { button.disabled = true; });
-      } else {
-        buttons.forEach((button) => { button.disabled = false; });
-      }
-    }
-  }
-
-  document.getElementById("simulate-success").addEventListener("click", () => {
-    simulatePayment("success");
-  });
-
-  document.getElementById("simulate-failure").addEventListener("click", () => {
-    simulatePayment("failed");
-  });
-
-  document.getElementById("simulate-abandon").addEventListener("click", () => {
-    simulatePayment("abandoned");
   });
 
   document.getElementById("start-over").addEventListener("click", () => {
