@@ -206,7 +206,7 @@
                         <label for="name">Full name</label>
                         <input id="name" name="name" type="text"
                                autocomplete="name" minlength="5" maxlength="120"
-                               pattern="[A-Za-zÀ-ÖØ-öø-ÿ]+([ '-][A-Za-zÀ-ÖØ-öø-ÿ]+)+" title="Enter your first and last name"
+                               pattern="\p{L}[\p{L}\p{M}]*(?:[ '\u2019-]\p{L}[\p{L}\p{M}]*)+" title="Enter your first and last name"
                                required placeholder="Enter your first and last name">
                     </div>
 
@@ -257,7 +257,7 @@
       type="text"
       minlength="5"
       maxlength="120"
-      pattern="[A-Za-zÀ-ÖØ-öø-ÿ]+([ '-][A-Za-zÀ-ÖØ-öø-ÿ]+)+"
+      pattern="\p{L}[\p{L}\p{M}]*(?:[ '\u2019-]\p{L}[\p{L}\p{M}]*)+"
       title="Enter your first and last name"
       required
       placeholder="Your full name"
