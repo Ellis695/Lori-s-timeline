@@ -47,7 +47,7 @@ app.post("/api/contact", async (req, res) => {
   const cleanEmail = typeof email === "string" ? email.trim() : "";
   const cleanProject = typeof project === "string" ? project.trim() : "";
   const cleanDetails = typeof details === "string" ? details.trim() : "";
-  const detailsWordCount = cleanDetails.split(/\\s+/).filter(Boolean).length;
+  const detailsWordCount = cleanDetails.split(/\s+/).filter(Boolean).length;
 
   if (!/^[A-Za-z]+(?: [A-Za-z]+)+$/.test(cleanName) || cleanName.length > 120 ||
       !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail) || cleanEmail.length > 254 ||
