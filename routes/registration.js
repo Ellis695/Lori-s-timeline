@@ -267,9 +267,9 @@ router.post("/", async (req, res) => {
     const cleanDescription = String(description).trim();
     const cleanGoal = String(goal).trim();
 
-    if (!/^[A-Za-z ]+$/.test(cleanName)) {
+    if (!/^[A-Za-zÀ-ÖØ-öø-ÿ]+([ '-][A-Za-zÀ-ÖØ-öø-ÿ]+)+$/.test(cleanName) || cleanName.length > 120) {
       return res.status(400).json({
-        message: "Name must contain letters and spaces only.",
+        message: "Please enter your full name, including your first and last name.",
       });
     }
 
