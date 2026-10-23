@@ -349,7 +349,7 @@ button,.btn{min-height:44px}
   .nav{align-items:flex-start;flex-direction:column;gap:12px;padding:15px 0}
   .navlinks{width:100%;justify-content:flex-start;gap:7px 15px}
   .navlinks a:not(.btn){font-size:12px}
-  .navlinks .btn{margin-left:auto}
+  .navlinks .btn{margin-left:0;padding:8px 12px;font-size:11px;min-height:36px}
   .hero{padding:42px 0 46px}
   .actions{display:flex;flex-direction:column;align-items:stretch}
   .actions .btn{width:100%}
@@ -360,7 +360,7 @@ button,.btn{min-height:44px}
 @media(max-width:360px){
   .wrap{width:calc(100% - 24px)}
   .navlinks{gap:8px 12px}
-  .navlinks .btn{width:100%;margin-left:0}
+  .navlinks .btn{width:auto;margin-left:0;padding:8px 10px;font-size:11px}
   h1{font-size:36px}
   .formbox{padding:18px 13px}
 }
