@@ -305,15 +305,17 @@ router.post("/", async (req, res) => {
       });
     }
 
-    // Reuse an existing pending registration so a retry doesn't create a duplicate.
-    let registration = await Registration.findOne({ email: cleanEmail });
-
-    if (registration && registration.status === "enrolled") {
+    // Reject any repeat registration for the same normalized email.
+    const existingRegistration = await Registration.findOne({ email: cleanEmail });
+    if (existingRegistration) {
       return res.status(409).json({
-        message: "This email is already enrolled.",
+        message: existingRegistration.status === "enrolled"
+          ? "This email is already enrolled."
+          : "This email already has a registration. Please continue with your existing registration or contact support.",
       });
     }
 
+    let registration;
     if (!registration) {
       registration = await Registration.create({
         name: cleanName,
