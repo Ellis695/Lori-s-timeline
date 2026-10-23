@@ -5,12 +5,23 @@ if (year) {
   year.textContent = new Date().getFullYear();
 }
 
+// Lock form controls while a submission is processing or after success.
+function setFormLocked(form, locked) {
+  form.querySelectorAll("input, select, textarea, button").forEach((control) => {
+    control.disabled = locked;
+  });
+  form.setAttribute("aria-busy", String(locked));
+}
+
 // Contact form: send enquiries through the backend email service
 const contactForm = document.getElementById("contact-form");
 
 if (contactForm) {
+  let contactSubmitted = false;
+  let contactSending = false;
   contactForm.addEventListener("submit", async (event) => {
     event.preventDefault();
+    if (contactSubmitted || contactSending) return;
 
     if (!contactForm.reportValidity()) return;
 
@@ -35,8 +46,9 @@ if (contactForm) {
     const status = document.getElementById("contact-status");
     const submitButton = contactForm.querySelector('button[type="submit"]');
     status.style.display = "block";
-    status.textContent = "Sending your enquiry...";
-    if (submitButton) submitButton.disabled = true;
+    status.textContent = "Sending your enquiry... Please wait.";
+    contactSending = true;
+    setFormLocked(contactForm, true);
 
     try {
       const response = await fetch("https://lori-s-timeline.onrender.com/api/contact", {
@@ -48,13 +60,15 @@ if (contactForm) {
       if (!response.ok) throw new Error(result.message || "Unable to send your enquiry.");
 
       status.textContent = "Your enquiry has been sent successfully. Thank you for contacting Lori's Timeline.";
+      contactSubmitted = true;
       contactForm.reset();
     } catch (error) {
       status.textContent = error.message === "Failed to fetch"
         ? "We couldn't connect to the enquiry service. Please try again shortly or email loristimeline@gmail.com directly."
         : error.message || "We couldn't send your enquiry. Please try again.";
     } finally {
-      if (submitButton) submitButton.disabled = false;
+      contactSending = false;
+      if (!contactSubmitted) setFormLocked(contactForm, false);
     }
   });
 }
@@ -78,6 +92,7 @@ if (registrationForm && checkout) {
   const resultMessage = document.getElementById("payment-result-message");
 
   let registrationId = null;
+  let registrationSending = false;
   let paymentInProgress = false;
 
   function getExpectedPhoneLength() {
@@ -141,6 +156,7 @@ if (registrationForm && checkout) {
 
   registrationForm.addEventListener("submit", async (event) => {
     event.preventDefault();
+    if (registrationSending || registrationId) return;
 
     if (!registrationForm.reportValidity()) return;
 
@@ -162,9 +178,9 @@ if (registrationForm && checkout) {
     };
 
     status.style.display = "block";
-    status.textContent = "Saving your registration...";
-
-    if (submitButton) submitButton.disabled = true;
+    status.textContent = "Saving your registration... Please wait.";
+    registrationSending = true;
+    setFormLocked(registrationForm, true);
 
     try {
       const response = await fetch(
@@ -200,12 +216,17 @@ if (!registrationId || !result.paymentReference) {
 
       checkout.scrollIntoView({ behavior: "smooth" });
     } catch (error) {
+      registrationSending = false;
+      setFormLocked(registrationForm, false);
       status.textContent =
         error.message === "Failed to fetch"
           ? "Could not connect to the server. Make sure your backend is running."
           : error.message || "Something went wrong. Please try again.";
     } finally {
-      if (submitButton) submitButton.disabled = false;
+      if (!registrationId) {
+        registrationSending = false;
+        setFormLocked(registrationForm, false);
+      }
     }
   });
 
@@ -268,9 +289,12 @@ if (!registrationId || !result.paymentReference) {
     } finally {
       paymentInProgress = false;
 
-      buttons.forEach((button) => {
-        button.disabled = false;
-      });
+      // Prevent repeated outcome clicks after the server records a result.
+      if (resultTitle.textContent !== "Something went wrong") {
+        buttons.forEach((button) => { button.disabled = true; });
+      } else {
+        buttons.forEach((button) => { button.disabled = false; });
+      }
     }
   }
 
@@ -290,6 +314,8 @@ if (!registrationId || !result.paymentReference) {
     checkout.hidden = true;
     registrationForm.closest("section").hidden = false;
     registrationForm.reset();
+    setFormLocked(registrationForm, false);
+    registrationSending = false;
 
     registrationId = null;
     status.textContent = "";
