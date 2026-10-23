@@ -311,7 +311,7 @@ router.post("/", async (req, res) => {
       return res.status(409).json({
         message: existingRegistration.status === "enrolled"
           ? "This email is already enrolled."
-          : "This email already has a registration. Please continue with your existing registration or contact support.",
+          : "This email already has a registration.",
       });
     }
 
