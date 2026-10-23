@@ -15,11 +15,21 @@ if (contactForm) {
     if (!contactForm.reportValidity()) return;
 
     const formData = new FormData(contactForm);
+    const detailsText = String(formData.get("details") || "").trim();
+    const wordCount = detailsText.split(/\\s+/).filter(Boolean).length;
+    const detailsInput = document.getElementById("details");
+    if (wordCount < 20) {
+      detailsInput.setCustomValidity("Please describe your project in at least 20 words.");
+      detailsInput.reportValidity();
+      return;
+    }
+    detailsInput.setCustomValidity("");
+
     const payload = {
       name: String(formData.get("name") || "").trim(),
       email: String(formData.get("email") || "").trim(),
       project: String(formData.get("project") || "").trim(),
-      details: String(formData.get("details") || "").trim(),
+      details: detailsText,
     };
 
     const status = document.getElementById("contact-status");
