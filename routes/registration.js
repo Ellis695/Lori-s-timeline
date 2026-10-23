@@ -375,61 +375,7 @@ Lori's Timeline`,
   }
 });
 
-// TEMPORARY LOCAL TESTING ONLY. Replace with verified Paystack callbacks later.
-router.post("/:id/simulate-payment", async (req, res) => {
-  try {
-    const { outcome } = req.body;
-
-    if (!["success", "failed", "abandoned"].includes(outcome)) {
-      return res.status(400).json({ message: "Invalid payment outcome." });
-    }
-
-    const registration = await Registration.findById(req.params.id);
-
-    if (!registration) {
-      return res.status(404).json({ message: "Registration not found." });
-    }
-
-    if (outcome !== "success") {
-      return res.json({
-        message: outcome === "failed"
-          ? "Payment failed. Registration remains pending."
-          : "Checkout abandoned. Registration remains pending.",
-        status: registration.status,
-      });
-    }
-
-    if (registration.status === "enrolled") {
-      return res.json({
-        message: "This registration is already enrolled.",
-        status: "enrolled",
-        emailSent: true,
-      });
-    }
-
-    registration.status = "enrolled";
-    await registration.save();
-
-    let emailSent = true;
-
-    try {
-      await sendEnrollmentEmail(registration);
-    } catch (emailError) {
-      emailSent = false;
-      console.error("Enrollment confirmation email failed:", emailError.message);
-    }
-
-    return res.json({
-      message: "Simulated payment confirmed.",
-      status: registration.status,
-      emailSent,
-    });
-  } catch (error) {
-    console.error("Payment simulation error:", error.message);
-    return res.status(500).json({
-      message: "Could not process the simulated payment.",
-    });
-  }
-});
-
+// The old public payment-simulation endpoint has been removed.
+ // Payment status changes are now handled by the authenticated admin API.
+ 
 module.exports = router;
