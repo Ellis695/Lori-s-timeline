@@ -423,7 +423,7 @@ Lori's Timeline Team`;
   } catch (error) {
     console.error("Demo payment email failed:", error.message);
     return res.status(502).json({
-      message: "The demo email could not be sent. Check the backend email configuration and logs.",
+      message: `The demo email could not be sent: ${error.message}. Check the Resend sender/domain configuration in Render.`,
       emailSent: false,
     });
   }
