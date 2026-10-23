@@ -267,7 +267,7 @@ router.post("/", async (req, res) => {
     const cleanDescription = String(description).trim();
     const cleanGoal = String(goal).trim();
 
-    if (!/^[A-Za-zÀ-ÖØ-öø-ÿ]+([ '-][A-Za-zÀ-ÖØ-öø-ÿ]+)+$/.test(cleanName) || cleanName.length > 120) {
+    if (!/^\p{L}[\p{L}\p{M}]*(?:[ '\u2019-]\p{L}[\p{L}\p{M}]*)+$/u.test(cleanName) || cleanName.length > 120) {
       return res.status(400).json({
         message: "Please enter your full name, including your first and last name.",
       });
