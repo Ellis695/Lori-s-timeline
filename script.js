@@ -37,7 +37,7 @@ if (contactForm) {
     detailsInput.setCustomValidity("");
 
     const fullName = String(formData.get("name") || "").trim().replace(/\s+/g, " ");
-    if (!/^\p{L}[\p{L}\p{M}]*(?:[ '\u2019-]\p{L}[\p{L}\p{M}]*)+$/u.test(fullName)) {
+    if (!/^[A-Za-z]+(?: [A-Za-z]+)+$/.test(fullName)) {
       const nameInput = document.getElementById("name");
       nameInput.setCustomValidity("Please enter your first and last name.");
       nameInput.reportValidity();
@@ -177,7 +177,7 @@ if (registrationForm && checkout) {
     const formData = new FormData(registrationForm);
 
     const fullName = String(formData.get("name") || "").trim().replace(/\s+/g, " ");
-    if (!/^\p{L}[\p{L}\p{M}]*(?:[ '\u2019-]\p{L}[\p{L}\p{M}]*)+$/u.test(fullName)) {
+    if (!/^[A-Za-z]+(?: [A-Za-z]+)+$/.test(fullName)) {
       const nameInput = document.getElementById("rname");
       nameInput.setCustomValidity("Please enter your first and last name.");
       nameInput.reportValidity();
