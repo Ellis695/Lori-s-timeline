@@ -497,3 +497,29 @@ button,.btn{min-height:44px}
     font-size: 11px;
   }
 }
+
+
+/* Keep country calling code and phone number side by side */
+.phone-input-row {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  gap: 10px;
+  align-items: end;
+}
+.phone-country, .phone-number { min-width: 0; }
+.phone-country label, .phone-number label {
+  display: block;
+  margin-bottom: 7px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.phone-input-row select, .phone-input-row input {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+@media (max-width: 420px) {
+  .phone-input-row { grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: 7px; }
+  .phone-country label, .phone-number label { font-size: 12px; }
+  .phone-input-row select, .phone-input-row input { padding-left: 9px; padding-right: 9px; }
+}
