@@ -19,16 +19,23 @@ const contactForm = document.getElementById("contact-form");
 if (contactForm) {
   let contactSubmitted = false;
   let contactSending = false;
+  const detailsInput = document.getElementById("details");
+
+  // Clear a previous word-count error as the user edits the enquiry.
+  if (detailsInput) {
+    detailsInput.addEventListener("input", () => detailsInput.setCustomValidity(""));
+  }
+
   contactForm.addEventListener("submit", async (event) => {
     event.preventDefault();
     if (contactSubmitted || contactSending) return;
 
+    if (detailsInput) detailsInput.setCustomValidity("");
     if (!contactForm.reportValidity()) return;
 
     const formData = new FormData(contactForm);
     const detailsText = String(formData.get("details") || "").trim();
     const wordCount = detailsText.split(/\s+/).filter(Boolean).length;
-    const detailsInput = document.getElementById("details");
     if (wordCount < 20) {
       detailsInput.setCustomValidity("Please describe your project in at least 20 words.");
       detailsInput.reportValidity();
