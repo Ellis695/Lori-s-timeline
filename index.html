@@ -227,8 +227,9 @@
 
                     <div class="field">
                         <label for="details">Project details</label>
-                        <textarea id="details" name="details" rows="4"
-                                  placeholder="Tell me about your project"></textarea>
+                        <textarea id="details" name="details" rows="4" required
+                                  placeholder="Describe your project in at least 20 words" aria-describedby="details-help"></textarea>
+                        <small id="details-help">Minimum 20 words. Include what you need, the type of video, and any important requirements.</small>
                     </div>
 
                     <button class="btn" type="submit">Submit enquiry</button>
