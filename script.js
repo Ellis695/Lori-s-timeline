@@ -267,6 +267,43 @@ if (!registrationId || !result.paymentReference) {
     }
   });
 
+  // Local-only demo simulation. It never calls the backend or changes enrolment status.
+  let demoPaymentFinished = false;
+  const demoButtons = [
+    document.getElementById("simulate-success"),
+    document.getElementById("simulate-failure"),
+    document.getElementById("simulate-abandon"),
+  ];
+
+  function showDemoPayment(outcome) {
+    if (demoPaymentFinished) return;
+    const resultBox = document.getElementById("payment-result");
+    const resultTitle = document.getElementById("payment-result-title");
+    const resultMessage = document.getElementById("payment-result-message");
+    resultBox.hidden = false;
+
+    if (outcome === "success") {
+      resultTitle.textContent = "Demo payment successful";
+      resultMessage.textContent = "This is only a simulation. No money was charged, no email was sent, and your registration is still pending until real payment is verified.";
+      demoPaymentFinished = true;
+    } else if (outcome === "failed") {
+      resultTitle.textContent = "Demo payment failed";
+      resultMessage.textContent = "This is only a simulation. No money was charged and your registration remains pending. You can try the demo again.";
+    } else {
+      resultTitle.textContent = "Demo checkout closed";
+      resultMessage.textContent = "Checkout was abandoned in this simulation. No money was charged and your registration remains pending.";
+      demoPaymentFinished = true;
+    }
+
+    demoButtons.forEach((button) => {
+      button.disabled = demoPaymentFinished;
+    });
+  }
+
+  document.getElementById("simulate-success").addEventListener("click", () => showDemoPayment("success"));
+  document.getElementById("simulate-failure").addEventListener("click", () => showDemoPayment("failed"));
+  document.getElementById("simulate-abandon").addEventListener("click", () => showDemoPayment("abandoned"));
+
   document.getElementById("start-over").addEventListener("click", () => {
     checkout.hidden = true;
     registrationForm.closest("section").hidden = false;
@@ -275,6 +312,9 @@ if (!registrationId || !result.paymentReference) {
     registrationSending = false;
 
     registrationId = null;
+    demoPaymentFinished = false;
+    demoButtons.forEach((button) => { button.disabled = false; });
+    document.getElementById("payment-result").hidden = true;
     status.textContent = "";
     status.style.display = "none";
 
