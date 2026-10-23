@@ -5,33 +5,47 @@ if (year) {
   year.textContent = new Date().getFullYear();
 }
 
-// Contact form: open an email addressed to Lori's Timeline with the enquiry details
+// Contact form: send enquiries through the backend email service
 const contactForm = document.getElementById("contact-form");
 
 if (contactForm) {
-  contactForm.addEventListener("submit", (event) => {
+  contactForm.addEventListener("submit", async (event) => {
     event.preventDefault();
 
     if (!contactForm.reportValidity()) return;
 
     const formData = new FormData(contactForm);
-    const name = String(formData.get("name") || "").trim();
-    const email = String(formData.get("email") || "").trim();
-    const project = String(formData.get("project") || "").trim();
-    const details = String(formData.get("details") || "").trim();
-
-    const subject = encodeURIComponent(`Video editing enquiry — ${name}`);
-    const body = encodeURIComponent(
-      `Name: ${name}\nEmail: ${email}\nService: ${project}\n\nProject details:\n${details || "Not provided"}`
-    );
+    const payload = {
+      name: String(formData.get("name") || "").trim(),
+      email: String(formData.get("email") || "").trim(),
+      project: String(formData.get("project") || "").trim(),
+      details: String(formData.get("details") || "").trim(),
+    };
 
     const status = document.getElementById("contact-status");
+    const submitButton = contactForm.querySelector('button[type="submit"]');
     status.style.display = "block";
-    status.textContent =
-      "Opening your email app with the enquiry addressed to Lori's Timeline. Please send the email to complete your enquiry.";
+    status.textContent = "Sending your enquiry...";
+    if (submitButton) submitButton.disabled = true;
 
-    window.location.href =
-      `mailto:loristimeline@gmail.com?subject=${subject}&body=${body}`;
+    try {
+      const response = await fetch("https://lori-s-timeline.onrender.com/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(result.message || "Unable to send your enquiry.");
+
+      status.textContent = "Your enquiry has been sent successfully. Thank you for contacting Lori's Timeline.";
+      contactForm.reset();
+    } catch (error) {
+      status.textContent = error.message === "Failed to fetch"
+        ? "We couldn't connect to the enquiry service. Please try again shortly or email loristimeline@gmail.com directly."
+        : error.message || "We couldn't send your enquiry. Please try again.";
+    } finally {
+      if (submitButton) submitButton.disabled = false;
+    }
   });
 }
 
