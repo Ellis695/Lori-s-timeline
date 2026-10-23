@@ -36,8 +36,17 @@ if (contactForm) {
     }
     detailsInput.setCustomValidity("");
 
+    const fullName = String(formData.get("name") || "").trim().replace(/\s+/g, " ");
+    if (!/^[A-Za-zÀ-ÖØ-öø-ÿ]+([ '-][A-Za-zÀ-ÖØ-öø-ÿ]+)+$/.test(fullName)) {
+      const nameInput = document.getElementById("name");
+      nameInput.setCustomValidity("Please enter your first and last name.");
+      nameInput.reportValidity();
+      return;
+    }
+    document.getElementById("name").setCustomValidity("");
+
     const payload = {
-      name: String(formData.get("name") || "").trim(),
+      name: fullName,
       email: String(formData.get("email") || "").trim(),
       project: String(formData.get("project") || "").trim(),
       details: detailsText,
@@ -167,8 +176,17 @@ if (registrationForm && checkout) {
 
     const formData = new FormData(registrationForm);
 
+    const fullName = String(formData.get("name") || "").trim().replace(/\s+/g, " ");
+    if (!/^[A-Za-zÀ-ÖØ-öø-ÿ]+([ '-][A-Za-zÀ-ÖØ-öø-ÿ]+)+$/.test(fullName)) {
+      const nameInput = document.getElementById("rname");
+      nameInput.setCustomValidity("Please enter your first and last name.");
+      nameInput.reportValidity();
+      return;
+    }
+    document.getElementById("rname").setCustomValidity("");
+
     const data = {
-      name: String(formData.get("name") || "").trim(),
+      name: fullName,
       email: String(formData.get("email") || "").trim(),
       confirmEmail: String(formData.get("confirmEmail") || "").trim(),
       countryCode: String(formData.get("countryCode") || "").trim(),
