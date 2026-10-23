@@ -5,17 +5,33 @@ if (year) {
   year.textContent = new Date().getFullYear();
 }
 
-// Contact form preview
+// Contact form: open an email addressed to Lori's Timeline with the enquiry details
 const contactForm = document.getElementById("contact-form");
 
 if (contactForm) {
   contactForm.addEventListener("submit", (event) => {
     event.preventDefault();
 
+    if (!contactForm.reportValidity()) return;
+
+    const formData = new FormData(contactForm);
+    const name = String(formData.get("name") || "").trim();
+    const email = String(formData.get("email") || "").trim();
+    const project = String(formData.get("project") || "").trim();
+    const details = String(formData.get("details") || "").trim();
+
+    const subject = encodeURIComponent(`Video editing enquiry — ${name}`);
+    const body = encodeURIComponent(
+      `Name: ${name}\nEmail: ${email}\nService: ${project}\n\nProject details:\n${details || "Not provided"}`
+    );
+
     const status = document.getElementById("contact-status");
     status.style.display = "block";
     status.textContent =
-      "Preview complete: your enquiry looks ready. This demo does not send it anywhere.";
+      "Opening your email app with the enquiry addressed to Lori's Timeline. Please send the email to complete your enquiry.";
+
+    window.location.href =
+      `mailto:loristimeline@gmail.com?subject=${subject}&body=${body}`;
   });
 }
 
