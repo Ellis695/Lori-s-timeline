@@ -463,3 +463,37 @@ button,.btn{min-height:44px}
         width: 100%;
     }
 }
+
+
+/* Keep the Work with me navigation item as a button while fitting mobile widths */
+@media (max-width: 760px) {
+  .navlinks {
+    gap: 6px 10px;
+  }
+  .navlinks .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    max-width: 100%;
+    padding: 8px 10px;
+    font-size: 11px;
+    line-height: 1.2;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+}
+@media (max-width: 520px) {
+  .navlinks {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 10px;
+  }
+  .navlinks .btn {
+    width: auto;
+    margin: 0;
+    padding: 8px 10px;
+    font-size: 11px;
+  }
+}
