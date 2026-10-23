@@ -385,10 +385,13 @@
 <section class="section" id="payment-checkout" hidden>
   <div class="wrap">
     <div class="formbox">
-      <h2>Payment checkout</h2>
-      <p>Your registration is saved as pending. Secure payment checkout is not available yet, so no payment has been taken and your place is not confirmed.</p>
+      <h2>Payment checkout demo</h2>
+      <p>Demo amount: <strong>₦15,000</strong></p>
       <p>Registration reference: <code id="payment-reference"></code></p>
-      <p class="notice">Please contact <a href="mailto:loristimeline@gmail.com">loristimeline@gmail.com</a> for an update. Checkout will be enabled once real payment verification is configured.</p>
+      <p class="notice"><strong>Testing mode:</strong> These buttons simulate checkout only. No money is charged, no confirmation email is sent, and your registration remains pending in the database.</p>
+      <button class="btn" id="simulate-success" type="button">Simulate successful payment</button>
+      <button class="btn secondary" id="simulate-failure" type="button">Simulate failed payment</button>
+      <button class="btn secondary" id="simulate-abandon" type="button">Close checkout (abandon)</button>
 
       <div id="payment-result" role="status" aria-live="polite" hidden>
         <h3 id="payment-result-title"></h3>
