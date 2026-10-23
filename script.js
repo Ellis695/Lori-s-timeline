@@ -115,6 +115,13 @@ if (registrationForm && checkout) {
     return Number(countrySelect.selectedOptions[0].dataset.length);
   }
 
+  function syncPhoneLengthLimit() {
+    const expectedLength = getExpectedPhoneLength();
+    phoneInput.maxLength = expectedLength;
+    phoneInput.placeholder = `Enter ${expectedLength} digits`;
+    phoneHelp.textContent = `Enter exactly ${expectedLength} digits for the selected country.`;
+  }
+
   function validatePhone() {
     const phone = phoneInput.value;
     const expectedLength = getExpectedPhoneLength();
@@ -156,14 +163,16 @@ if (registrationForm && checkout) {
     return true;
   }
 
+  syncPhoneLengthLimit();
+
   phoneInput.addEventListener("input", () => {
-    phoneInput.value = phoneInput.value.replace(/\D/g, "");
+    phoneInput.value = phoneInput.value.replace(/\D/g, "").slice(0, getExpectedPhoneLength());
     validatePhone();
   });
 
   countrySelect.addEventListener("change", () => {
     phoneInput.value = "";
-    phoneInput.placeholder = `Enter ${getExpectedPhoneLength()} digits`;
+    syncPhoneLengthLimit();
     validatePhone();
   });
 
