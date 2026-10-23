@@ -49,7 +49,7 @@ app.post("/api/contact", async (req, res) => {
   const cleanDetails = typeof details === "string" ? details.trim() : "";
   const detailsWordCount = cleanDetails.split(/\s+/).filter(Boolean).length;
 
-  if (!/^[A-Za-z]+(?: [A-Za-z]+)+$/.test(cleanName) || cleanName.length > 120 ||
+  if (!/^[A-Za-z]{2,}(?: [A-Za-z]{2,})+$/.test(cleanName) || cleanName.length > 120 ||
       !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail) || cleanEmail.length > 254 ||
       !cleanProject || cleanProject.length > 120 || detailsWordCount < 20 || cleanDetails.length > 5000) {
     return res.status(400).json({ message: "Please enter your first and last name, and check your other details." });
