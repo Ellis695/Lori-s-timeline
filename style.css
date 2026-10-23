@@ -523,3 +523,40 @@ button,.btn{min-height:44px}
   .phone-country label, .phone-number label { font-size: 12px; }
   .phone-input-row select, .phone-input-row input { padding-left: 9px; padding-right: 9px; }
 }
+
+
+/* Make Work with me visibly match the site's button styling on every screen */
+.navlinks a.nav-cta,
+.navlinks a.nav-cta:link,
+.navlinks a.nav-cta:visited {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  min-height: 38px;
+  padding: 9px 14px;
+  border: 1px solid var(--pink, #d63384);
+  border-radius: 999px;
+  background: var(--pink, #d63384);
+  color: #fff;
+  font-weight: 700;
+  line-height: 1.2;
+  text-decoration: none;
+  white-space: nowrap;
+  box-sizing: border-box;
+}
+.navlinks a.nav-cta:hover,
+.navlinks a.nav-cta:focus-visible {
+  filter: brightness(.95);
+  color: #fff;
+}
+@media (max-width: 760px) {
+  .navlinks a.nav-cta,
+  .navlinks a.nav-cta:link,
+  .navlinks a.nav-cta:visited {
+    min-height: 36px;
+    padding: 8px 10px;
+    font-size: 11px;
+    flex: 0 0 auto;
+  }
+}
