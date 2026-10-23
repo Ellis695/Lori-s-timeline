@@ -203,9 +203,11 @@
                     <h3>Tell me about your project</h3>
 
                     <div class="field">
-                        <label for="name">Your name</label>
+                        <label for="name">Full name</label>
                         <input id="name" name="name" type="text"
-                               required placeholder="Full name">
+                               autocomplete="name" minlength="5" maxlength="120"
+                               pattern="[A-Za-zÀ-ÖØ-öø-ÿ]+([ '-][A-Za-zÀ-ÖØ-öø-ÿ]+)+" title="Enter your first and last name"
+                               required placeholder="Enter your first and last name">
                     </div>
 
                     <div class="field">
@@ -253,8 +255,10 @@
       id="rname"
       name="name"
       type="text"
-      pattern="[A-Za-z ]+"
-      title="Use letters and spaces only"
+      minlength="5"
+      maxlength="120"
+      pattern="[A-Za-zÀ-ÖØ-öø-ÿ]+([ '-][A-Za-zÀ-ÖØ-öø-ÿ]+)+"
+      title="Enter your first and last name"
       required
       placeholder="Your full name"
     >
