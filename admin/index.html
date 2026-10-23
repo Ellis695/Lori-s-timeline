@@ -20,7 +20,10 @@
         <label for="username">Username</label>
         <input id="username" name="username" autocomplete="username" required>
         <label for="password">Password</label>
-        <input id="password" name="password" type="password" autocomplete="current-password" required>
+        <div class="password-wrap">
+          <input id="password" name="password" type="password" autocomplete="current-password" required>
+          <button id="toggle-password" class="password-toggle" type="button" aria-controls="password" aria-pressed="false">Show</button>
+        </div>
         <button class="primary" type="submit">Sign in</button>
         <p id="login-message" class="message" role="status"></p>
       </form>
