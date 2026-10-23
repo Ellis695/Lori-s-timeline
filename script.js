@@ -275,29 +275,45 @@ if (!registrationId || !result.paymentReference) {
     document.getElementById("simulate-abandon"),
   ];
 
-  function showDemoPayment(outcome) {
-    if (demoPaymentFinished) return;
+  async function showDemoPayment(outcome) {
+    if (demoPaymentFinished || !registrationId) return;
     const resultBox = document.getElementById("payment-result");
     const resultTitle = document.getElementById("payment-result-title");
     const resultMessage = document.getElementById("payment-result-message");
     resultBox.hidden = false;
+    resultTitle.textContent = "Sending demo email...";
+    resultMessage.textContent = "Please wait.";
+    demoButtons.forEach((button) => { button.disabled = true; });
 
-    if (outcome === "success") {
-      resultTitle.textContent = "Demo payment successful";
-      resultMessage.textContent = "This is only a simulation. No money was charged, no email was sent, and your registration is still pending until real payment is verified.";
-      demoPaymentFinished = true;
-    } else if (outcome === "failed") {
-      resultTitle.textContent = "Demo payment failed";
-      resultMessage.textContent = "This is only a simulation. No money was charged and your registration remains pending. You can try the demo again.";
-    } else {
-      resultTitle.textContent = "Demo checkout closed";
-      resultMessage.textContent = "Checkout was abandoned in this simulation. No money was charged and your registration remains pending.";
-      demoPaymentFinished = true;
+    try {
+      const response = await fetch(
+        `https://lori-s-timeline.onrender.com/api/registrations/${encodeURIComponent(registrationId)}/simulate-payment`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ outcome }),
+        }
+      );
+      const contentType = response.headers.get("content-type") || "";
+      const result = contentType.includes("application/json")
+        ? await response.json()
+        : { message: "The server returned an unexpected response. Please try again." };
+      if (!response.ok) throw new Error(result.message || "Could not send demo email.");
+
+      resultTitle.textContent = outcome === "success"
+        ? "Demo payment successful"
+        : outcome === "failed" ? "Demo payment failed" : "Demo checkout closed";
+      resultMessage.textContent = outcome === "success"
+        ? "A clearly labelled test email was sent. No money was charged and your registration remains pending until real payment is verified."
+        : "A clearly labelled test email was sent. No money was charged and your registration remains pending.";
+      if (result.emailSent !== true) resultMessage.textContent += " Email delivery was not confirmed.";
+      demoPaymentFinished = outcome !== "failed";
+    } catch (error) {
+      resultTitle.textContent = "Demo email could not be sent";
+      resultMessage.textContent = error.message || "Please try again.";
+    } finally {
+      demoButtons.forEach((button) => { button.disabled = demoPaymentFinished; });
     }
-
-    demoButtons.forEach((button) => {
-      button.disabled = demoPaymentFinished;
-    });
   }
 
   document.getElementById("simulate-success").addEventListener("click", () => showDemoPayment("success"));
