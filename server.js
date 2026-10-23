@@ -9,6 +9,7 @@ dotenv.config();
 
 const registrationRoute = require("./routes/registration");
 const adminRoute = require("./routes/admin");
+const emailTransporter = require("./config/email");
 
 mongoose
   .connect(process.env.MONGODB_URI, { dbName: "loris-timeline" })
@@ -38,6 +39,36 @@ app.get("/", (req, res) => {
 
 app.use("/api/registrations", registrationRoute);
 app.use("/api/admin", adminRoute);
+
+
+app.post("/api/contact", async (req, res) => {
+  const { name, email, project, details } = req.body || {};
+  const cleanName = typeof name === "string" ? name.trim() : "";
+  const cleanEmail = typeof email === "string" ? email.trim() : "";
+  const cleanProject = typeof project === "string" ? project.trim() : "";
+  const cleanDetails = typeof details === "string" ? details.trim() : "";
+
+  if (!cleanName || cleanName.length > 120 ||
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail) || cleanEmail.length > 254 ||
+      !cleanProject || cleanProject.length > 120 || cleanDetails.length > 5000) {
+    return res.status(400).json({ message: "Please check your details and try again." });
+  }
+
+  try {
+    await emailTransporter.sendMail({
+      to: "loristimeline@gmail.com",
+      replyTo: cleanEmail,
+      subject: `Website enquiry — ${cleanName}`,
+      text: `A new enquiry was submitted through Lori's Timeline.\n\nName: ${cleanName}\nEmail: ${cleanEmail}\nService: ${cleanProject}\n\nProject details:\n${cleanDetails || "Not provided"}`,
+    });
+    return res.json({ message: "Your enquiry has been sent successfully." });
+  } catch (error) {
+    console.error("Contact enquiry email failed:", error.message);
+    return res.status(502).json({
+      message: "We couldn't send your enquiry right now. Please try again later or email loristimeline@gmail.com directly."
+    });
+  }
+});
 
 app.get("/api/health", (req, res) => {
   res.json({
