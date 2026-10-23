@@ -118,3 +118,12 @@ document.getElementById("refresh-button").addEventListener("click", loadRegistra
 searchInput.addEventListener("input", renderRows);
 statusFilter.addEventListener("change", renderRows);
 if (token) { showDashboard(true); loadRegistrations(); } else { showDashboard(false); }
+
+const passwordInput = document.getElementById("password");
+const togglePasswordButton = document.getElementById("toggle-password");
+togglePasswordButton.addEventListener("click", () => {
+  const shouldShow = passwordInput.type === "password";
+  passwordInput.type = shouldShow ? "text" : "password";
+  togglePasswordButton.textContent = shouldShow ? "Hide" : "Show";
+  togglePasswordButton.setAttribute("aria-pressed", String(shouldShow));
+});
