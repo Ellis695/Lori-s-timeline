@@ -27,7 +27,7 @@ if (contactForm) {
 
     const formData = new FormData(contactForm);
     const detailsText = String(formData.get("details") || "").trim();
-    const wordCount = detailsText.split(/\\s+/).filter(Boolean).length;
+    const wordCount = detailsText.split(/\s+/).filter(Boolean).length;
     const detailsInput = document.getElementById("details");
     if (wordCount < 20) {
       detailsInput.setCustomValidity("Please describe your project in at least 20 words.");
