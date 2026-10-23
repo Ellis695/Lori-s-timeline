@@ -365,3 +365,101 @@ button,.btn{min-height:44px}
   .formbox{padding:18px 13px}
 }
 
+
+
+/* Mentorship section: full-width programme overview with a clear CTA below */
+#mentorship .mentorship-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 18px;
+}
+
+#mentorship .mentorship-overview {
+    padding: clamp(24px, 4vw, 38px);
+}
+
+#mentorship .mentorship-overview > p {
+    max-width: 680px;
+}
+
+#mentorship .steps {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 18px;
+    margin-top: 26px;
+}
+
+#mentorship .step {
+    min-width: 0;
+    padding: 18px 12px 12px 0;
+}
+
+#mentorship .step h3 {
+    margin-top: 0;
+}
+
+#mentorship .learn-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 28px;
+    padding: 26px clamp(24px, 4vw, 38px);
+    background: linear-gradient(110deg, var(--pink2), #fff 72%);
+    border-color: #efd6df;
+}
+
+#mentorship .learn-copy {
+    max-width: 620px;
+}
+
+#mentorship .learn-copy .eyebrow {
+    color: var(--plum);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+}
+
+#mentorship .learn-copy h3 {
+    margin: 7px 0 5px;
+    font-size: clamp(23px, 3vw, 30px);
+}
+
+#mentorship .learn-copy p {
+    margin: 0;
+}
+
+#mentorship .learn-card .btn {
+    flex: 0 0 auto;
+}
+
+@media (max-width: 760px) {
+    #mentorship .steps {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px 14px;
+        margin-top: 20px;
+    }
+    #mentorship .step {
+        padding: 15px 4px 12px 0;
+    }
+    #mentorship .learn-card {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 18px;
+        padding: 23px 21px;
+    }
+    #mentorship .learn-card .btn {
+        width: auto;
+    }
+}
+
+@media (max-width: 520px) {
+    #mentorship .mentorship-overview,
+    #mentorship .learn-card {
+        padding: 20px 18px;
+    }
+    #mentorship .step h3 {
+        font-size: 19px;
+    }
+    #mentorship .learn-card .btn {
+        width: 100%;
+    }
+}
