@@ -50,14 +50,14 @@ function renderRows() {
   const query = searchInput.value.trim().toLowerCase();
   const status = statusFilter.value;
   const filtered = registrations.filter((item) => {
-    const haystack = [item.name,item.email,item.goal,item.paymentReference,item.phone].join(" ").toLowerCase();
+    const haystack = [item.name,item.email,item.description,item.goal,item.paymentReference,item.phone].join(" ").toLowerCase();
     return haystack.includes(query) && (status === "all" || item.status === status);
   });
   rows.replaceChildren();
   if (!filtered.length) {
     const tr = document.createElement("tr");
     const td = document.createElement("td");
-    td.colSpan = 6; td.className = "empty"; td.textContent = "No registrations found.";
+    td.colSpan = 7; td.className = "empty"; td.textContent = "No registrations found.";
     tr.append(td); rows.append(tr); return;
   }
   filtered.forEach((item) => {
@@ -66,6 +66,7 @@ function renderRows() {
     const name = document.createElement("span"); name.className = "student-name"; name.textContent = item.name;
     const email = document.createElement("span"); email.className = "student-email"; email.textContent = item.email;
     student.append(name,email);
+    const about = document.createElement("td"); about.textContent = item.description || "—";
     const goal = document.createElement("td"); goal.textContent = item.goal || "—";
     const ref = document.createElement("td"); ref.className = "ref"; ref.textContent = item.paymentReference || "—";
     const state = document.createElement("td");
@@ -77,7 +78,7 @@ function renderRows() {
     button.textContent = item.status === "enrolled" ? "Set pending" : "Confirm payment";
     button.addEventListener("click", () => updateStatus(item, item.status === "enrolled" ? "pending" : "enrolled"));
     actionCell.append(button);
-    tr.append(student,goal,ref,state,date,actionCell); rows.append(tr);
+    tr.append(student,about,goal,ref,state,date,actionCell); rows.append(tr);
   });
 }
 async function updateStatus(item, nextStatus) {
