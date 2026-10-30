@@ -206,21 +206,37 @@
                     <h3>Tell me about your project</h3>
 
                     <div class="field">
+                        <label for="enquiry-type">What would you like to do?</label>
+                        <select id="enquiry-type" name="enquiryType" required>
+                            <option value="">Choose an enquiry type</option>
+                            <option value="Request a Quote">Request a Quote</option>
+                            <option value="General Project Enquiry">General Project Enquiry</option>
+                        </select>
+                    </div>
+
+                    <div class="field">
                         <label for="name">Full name</label>
-                        <input id="name" name="name" type="text"
-                               autocomplete="name" minlength="5" maxlength="120"
-                               pattern="[A-Za-z]{2,}( [A-Za-z]{2,})+" title="Please enter your first and last name"
-                               required placeholder="Please enter your first and last name">
+                        <input id="name" name="name" type="text" autocomplete="name"
+                               minlength="5" maxlength="120"
+                               pattern="[A-Za-z]{2,}( [A-Za-z]{2,})+"
+                               title="Please enter your first and last name"
+                               required placeholder="Your first and last name">
                     </div>
 
                     <div class="field">
                         <label for="email">Email address</label>
-                        <input id="email" name="email" type="email"
-                               required placeholder="you@example.com">
+                        <input id="email" name="email" type="email" autocomplete="email"
+                               maxlength="254" required placeholder="you@example.com">
                     </div>
 
                     <div class="field">
-                        <label for="project">What do you need?</label>
+                        <label for="contact-phone">Phone number (optional)</label>
+                        <input id="contact-phone" name="phone" type="tel" autocomplete="tel"
+                               maxlength="30" placeholder="Include your country code">
+                    </div>
+
+                    <div class="field">
+                        <label for="project">Which service are you interested in?</label>
                         <select id="project" name="project" required>
                             <option value="">Choose a service</option>
                             <option>Short-form videos</option>
@@ -231,14 +247,31 @@
                     </div>
 
                     <div class="field">
-                        <label for="details">Project details</label>
-                        <textarea id="details" name="details" rows="4" required
-                                  placeholder="Describe your project in at least 20 words" aria-describedby="details-help"></textarea>
-                        <small id="details-help">Minimum 20 words. Include what you need, the type of video, and any important requirements.</small>
+                        <label for="details">Tell me about your project</label>
+                        <textarea id="details" name="details" rows="5" minlength="20" maxlength="5000"
+                                  required placeholder="What do you need, and what should the finished video achieve?"></textarea>
+                        <small>Give at least five words so we can understand what you need.</small>
                     </div>
 
-                    <button class="btn" type="submit">Submit enquiry</button>
-                    <p class="notice status" id="contact-status"></p>
+                    <div class="field">
+                        <label for="budget">Estimated budget (optional)</label>
+                        <select id="budget" name="budget">
+                            <option value="">Prefer to discuss</option>
+                            <option>Below ₦50,000</option>
+                            <option>₦50,000–₦100,000</option>
+                            <option>₦100,000–₦250,000</option>
+                            <option>₦250,000–₦500,000</option>
+                            <option>Above ₦500,000</option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label for="delivery-date">Expected delivery date (optional)</label>
+                        <input id="delivery-date" name="deliveryDate" type="date">
+                    </div>
+
+                    <button class="btn" type="submit">Send enquiry</button>
+                    <p class="notice status" id="contact-status" role="status" aria-live="polite"></p>
                 </form>
             </div>
         </section>
