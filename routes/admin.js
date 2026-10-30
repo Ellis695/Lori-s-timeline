@@ -59,7 +59,7 @@ router.post("/login", (req, res) => {
 router.get("/registrations", requireAdmin, async (req, res) => {
   try {
     const registrations = await Registration.find({})
-      .select("name email phone countryCode goal paymentReference status createdAt updatedAt")
+      .select("name email phone countryCode description goal paymentReference status createdAt updatedAt")
       .sort({ createdAt: -1 })
       .lean();
 
