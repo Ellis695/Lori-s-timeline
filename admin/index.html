@@ -35,6 +35,11 @@
         <button id="logout-button" class="outline">Log out</button>
       </header>
       <p id="dashboard-message" class="message" role="status"></p>
+      <nav class="dashboard-tabs" aria-label="Dashboard sections">
+        <button type="button" class="dashboard-tab active" data-panel="registrations-panel">Student Registrations</button>
+        <button type="button" class="dashboard-tab" data-panel="enquiries-panel">Enquiries</button>
+      </nav>
+      <section id="registrations-panel">
       <div class="stats">
         <article class="stat"><strong id="total-count">—</strong><span>Registrations</span></article>
         <article class="stat"><strong id="enrolled-count">—</strong><span>Enrolled</span></article>
@@ -62,6 +67,29 @@
         </div>
       </section>
       <p class="footnote">Manual confirmation is for payments you have independently verified. This dashboard does not process payments.</p>
+      </section>
+      <section id="enquiries-panel" hidden>
+        <section class="table-card">
+          <div class="table-toolbar">
+            <div><h2>Business enquiries</h2><p>Review quote requests and project questions separately from student registrations.</p></div>
+            <div class="filters">
+              <input id="enquiry-search" type="search" placeholder="Search enquiries…" aria-label="Search enquiries">
+              <select id="enquiry-status-filter" aria-label="Filter enquiries by status">
+                <option value="all">All statuses</option>
+                <option>New</option><option>Contacted</option><option>Quoted</option><option>Accepted</option><option>Declined</option>
+              </select>
+              <button id="enquiry-refresh" class="outline" type="button">Refresh</button>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>CLIENT</th><th>TYPE</th><th>SERVICE</th><th>STATUS</th><th>DATE</th><th>UPDATE STATUS</th></tr></thead>
+              <tbody id="enquiry-rows"><tr><td colspan="6" class="empty">Open Enquiries to load submissions.</td></tr></tbody>
+            </table>
+          </div>
+        </section>
+      </section>
+
     </section>
   </main>
   <script src="./admin.js"></script>
