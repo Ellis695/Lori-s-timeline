@@ -44,7 +44,7 @@ app.use("/api/admin", adminRoute);
 app.post("/api/contact", async (req, res) => {
   const Enquiry = require("./models/Enquiry");
   const { name, email, phone, enquiryType, project, details, budget, deliveryDate } = req.body || {};
-  const cleanName = typeof name === "string" ? name.trim().replace(/\\s+/g, " ") : "";
+  const cleanName = typeof name === "string" ? name.trim().replace(/\s+/g, " ") : "";
   const cleanEmail = typeof email === "string" ? email.trim().toLowerCase() : "";
   const cleanPhone = typeof phone === "string" ? phone.trim() : "";
   const cleanType = typeof enquiryType === "string" ? enquiryType.trim() : "";
@@ -52,10 +52,10 @@ app.post("/api/contact", async (req, res) => {
   const cleanDetails = typeof details === "string" ? details.trim() : "";
   const cleanBudget = typeof budget === "string" ? budget.trim() : "";
   const cleanDeliveryDate = typeof deliveryDate === "string" ? deliveryDate.trim() : "";
-  const wordCount = cleanDetails.split(/\\s+/).filter(Boolean).length;
+  const wordCount = cleanDetails.split(/\s+/).filter(Boolean).length;
 
   if (!/^[A-Za-z]{2,}(?: [A-Za-z]{2,})+$/.test(cleanName) || cleanName.length > 120 ||
-      !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(cleanEmail) || cleanEmail.length > 254 ||
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail) || cleanEmail.length > 254 ||
       (cleanPhone && cleanPhone.length > 30) ||
       !["Request a Quote", "General Project Enquiry"].includes(cleanType) ||
       !cleanProject || cleanProject.length > 120 || wordCount < 5 || cleanDetails.length > 5000 ||
