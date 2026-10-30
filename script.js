@@ -13,7 +13,7 @@ function setFormLocked(form, locked) {
   form.setAttribute("aria-busy", String(locked));
 }
 
-// Contact form: send enquiries through the backend email service
+// Business enquiries: save to the database and notify Lori by email.
 const contactForm = document.getElementById("contact-form");
 
 if (contactForm) {
@@ -21,29 +21,25 @@ if (contactForm) {
   let contactSending = false;
   const detailsInput = document.getElementById("details");
 
-  // Clear a previous word-count error as the user edits the enquiry.
   if (detailsInput) {
     detailsInput.addEventListener("input", () => detailsInput.setCustomValidity(""));
   }
 
   contactForm.addEventListener("submit", async (event) => {
     event.preventDefault();
-    if (contactSubmitted || contactSending) return;
-
-    if (detailsInput) detailsInput.setCustomValidity("");
-    if (!contactForm.reportValidity()) return;
+    if (contactSubmitted || contactSending || !contactForm.reportValidity()) return;
 
     const formData = new FormData(contactForm);
     const detailsText = String(formData.get("details") || "").trim();
-    const wordCount = detailsText.split(/\s+/).filter(Boolean).length;
-    if (wordCount < 20) {
-      detailsInput.setCustomValidity("Please describe your project in at least 20 words.");
+    const wordCount = detailsText.split(/\\s+/).filter(Boolean).length;
+    if (wordCount < 5) {
+      detailsInput.setCustomValidity("Please describe your project in at least five words.");
       detailsInput.reportValidity();
       return;
     }
     detailsInput.setCustomValidity("");
 
-    const fullName = String(formData.get("name") || "").trim().replace(/\s+/g, " ");
+    const fullName = String(formData.get("name") || "").trim().replace(/\\s+/g, " ");
     if (!/^[A-Za-z]{2,}(?: [A-Za-z]{2,})+$/.test(fullName)) {
       const nameInput = document.getElementById("name");
       nameInput.setCustomValidity("Please enter your first and last name.");
@@ -55,12 +51,15 @@ if (contactForm) {
     const payload = {
       name: fullName,
       email: String(formData.get("email") || "").trim(),
+      phone: String(formData.get("phone") || "").trim(),
+      enquiryType: String(formData.get("enquiryType") || "").trim(),
       project: String(formData.get("project") || "").trim(),
       details: detailsText,
+      budget: String(formData.get("budget") || "").trim(),
+      deliveryDate: String(formData.get("deliveryDate") || "").trim()
     };
 
     const status = document.getElementById("contact-status");
-    const submitButton = contactForm.querySelector('button[type="submit"]');
     status.style.display = "block";
     status.textContent = "Sending your enquiry... Please wait.";
     contactSending = true;
@@ -70,18 +69,21 @@ if (contactForm) {
       const response = await fetch("https://lori-s-timeline.onrender.com/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+        body: JSON.stringify(payload)
       });
       const result = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(result.message || "Unable to send your enquiry.");
 
-      status.textContent = "Your enquiry has been sent successfully. Thank you for contacting Lori's Timeline.";
+      status.textContent = "Your enquiry has been received. Lori's Timeline will be in touch.";
+      if (result.emailNotificationSent === false) {
+        status.textContent += " Your request is saved; email notification is temporarily unavailable.";
+      }
       contactSubmitted = true;
       contactForm.reset();
     } catch (error) {
       status.textContent = error.message === "Failed to fetch"
         ? "We couldn't connect to the enquiry service. Please try again shortly or email loristimeline@gmail.com directly."
-        : error.message || "We couldn't send your enquiry. Please try again.";
+        : error.message || "We couldn't submit your enquiry. Please try again.";
     } finally {
       contactSending = false;
       if (!contactSubmitted) setFormLocked(contactForm, false);
