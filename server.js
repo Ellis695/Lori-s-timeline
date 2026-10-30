@@ -42,32 +42,67 @@ app.use("/api/admin", adminRoute);
 
 
 app.post("/api/contact", async (req, res) => {
-  const { name, email, project, details } = req.body || {};
-  const cleanName = typeof name === "string" ? name.trim() : "";
-  const cleanEmail = typeof email === "string" ? email.trim() : "";
+  const Enquiry = require("./models/Enquiry");
+  const { name, email, phone, enquiryType, project, details, budget, deliveryDate } = req.body || {};
+  const cleanName = typeof name === "string" ? name.trim().replace(/\\s+/g, " ") : "";
+  const cleanEmail = typeof email === "string" ? email.trim().toLowerCase() : "";
+  const cleanPhone = typeof phone === "string" ? phone.trim() : "";
+  const cleanType = typeof enquiryType === "string" ? enquiryType.trim() : "";
   const cleanProject = typeof project === "string" ? project.trim() : "";
   const cleanDetails = typeof details === "string" ? details.trim() : "";
-  const detailsWordCount = cleanDetails.split(/\s+/).filter(Boolean).length;
+  const cleanBudget = typeof budget === "string" ? budget.trim() : "";
+  const cleanDeliveryDate = typeof deliveryDate === "string" ? deliveryDate.trim() : "";
+  const wordCount = cleanDetails.split(/\\s+/).filter(Boolean).length;
 
   if (!/^[A-Za-z]{2,}(?: [A-Za-z]{2,})+$/.test(cleanName) || cleanName.length > 120 ||
-      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail) || cleanEmail.length > 254 ||
-      !cleanProject || cleanProject.length > 120 || detailsWordCount < 20 || cleanDetails.length > 5000) {
-    return res.status(400).json({ message: "Please enter your first and last name, and check your other details." });
+      !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(cleanEmail) || cleanEmail.length > 254 ||
+      (cleanPhone && cleanPhone.length > 30) ||
+      !["Request a Quote", "General Project Enquiry"].includes(cleanType) ||
+      !cleanProject || cleanProject.length > 120 || wordCount < 5 || cleanDetails.length > 5000 ||
+      cleanBudget.length > 100 || cleanDeliveryDate.length > 40) {
+    return res.status(400).json({ message: "Please check your details. Describe your project in at least five words." });
   }
 
   try {
-    await emailTransporter.sendMail({
-      to: "loristimeline@gmail.com",
-      replyTo: cleanEmail,
-      subject: `Website enquiry — ${cleanName}`,
-      text: `A new enquiry was submitted through Lori's Timeline.\n\nName: ${cleanName}\nEmail: ${cleanEmail}\nService: ${cleanProject}\n\nProject details:\n${cleanDetails || "Not provided"}`,
+    const enquiry = await Enquiry.create({
+      name: cleanName, email: cleanEmail, phone: cleanPhone,
+      enquiryType: cleanType, service: cleanProject, details: cleanDetails,
+      budget: cleanBudget, deliveryDate: cleanDeliveryDate, status: "New"
     });
-    return res.json({ message: "Your enquiry has been sent successfully." });
+
+    let emailSent = false;
+    try {
+      await emailTransporter.sendMail({
+        to: "loristimeline@gmail.com",
+        replyTo: cleanEmail,
+        subject: `Website enquiry — ${cleanType} — ${cleanName}`,
+        text: `A new enquiry was submitted through Lori's Timeline.
+
+Enquiry ID: ${enquiry._id}
+Type: ${cleanType}
+Name: ${cleanName}
+Email: ${cleanEmail}
+Phone: ${cleanPhone || "Not provided"}
+Service: ${cleanProject}
+Budget: ${cleanBudget || "Not provided"}
+Expected delivery: ${cleanDeliveryDate || "Not provided"}
+
+Project details:
+${cleanDetails}`,
+      });
+      emailSent = true;
+    } catch (emailError) {
+      console.error("Contact enquiry email failed:", emailError.message);
+    }
+
+    return res.status(201).json({
+      message: "Your enquiry has been received successfully.",
+      enquiryId: enquiry._id,
+      emailNotificationSent: emailSent
+    });
   } catch (error) {
-    console.error("Contact enquiry email failed:", error.message);
-    return res.status(502).json({
-      message: "We couldn't send your enquiry right now. Please try again later or email loristimeline@gmail.com directly."
-    });
+    console.error("Contact enquiry save failed:", error.message);
+    return res.status(500).json({ message: "We couldn't save your enquiry right now. Please try again later." });
   }
 });
 
