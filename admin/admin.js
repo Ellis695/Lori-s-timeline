@@ -119,6 +119,95 @@ searchInput.addEventListener("input", renderRows);
 statusFilter.addEventListener("change", renderRows);
 if (token) { showDashboard(true); loadRegistrations(); } else { showDashboard(false); }
 
+
+const enquiryRows = document.getElementById("enquiry-rows");
+const enquirySearch = document.getElementById("enquiry-search");
+const enquiryStatusFilter = document.getElementById("enquiry-status-filter");
+let enquiries = [];
+
+function switchDashboardPanel(panelId) {
+  document.getElementById("registrations-panel").hidden = panelId !== "registrations-panel";
+  document.getElementById("enquiries-panel").hidden = panelId !== "enquiries-panel";
+  document.querySelectorAll(".dashboard-tab").forEach((button) => {
+    button.classList.toggle("active", button.dataset.panel === panelId);
+  });
+  if (panelId === "enquiries-panel") loadEnquiries();
+}
+document.querySelectorAll(".dashboard-tab").forEach((button) => {
+  button.addEventListener("click", () => switchDashboardPanel(button.dataset.panel));
+});
+
+async function loadEnquiries() {
+  setMessage(dashboardMessage, "Loading enquiries…");
+  try {
+    const data = await api("/enquiries");
+    enquiries = data.enquiries || [];
+    renderEnquiries();
+    setMessage(dashboardMessage, "");
+  } catch (error) {
+    setMessage(dashboardMessage, error.message);
+  }
+}
+function renderEnquiries() {
+  if (!enquiryRows) return;
+  const query = enquirySearch.value.trim().toLowerCase();
+  const status = enquiryStatusFilter.value;
+  const filtered = enquiries.filter((item) => {
+    const haystack = [item.name,item.email,item.phone,item.enquiryType,item.service,item.details].join(" ").toLowerCase();
+    return haystack.includes(query) && (status === "all" || item.status === status);
+  });
+  enquiryRows.replaceChildren();
+  if (!filtered.length) {
+    const tr = document.createElement("tr");
+    const td = document.createElement("td");
+    td.colSpan = 6; td.className = "empty"; td.textContent = "No enquiries found.";
+    tr.append(td); enquiryRows.append(tr); return;
+  }
+  filtered.forEach((item) => {
+    const tr = document.createElement("tr");
+    const client = document.createElement("td");
+    const name = document.createElement("span"); name.className = "student-name"; name.textContent = item.name;
+    const email = document.createElement("span"); email.className = "student-email"; email.textContent = item.email;
+    const details = document.createElement("span"); details.className = "student-email";
+    details.textContent = [item.phone,item.budget ? "Budget: "+item.budget : "",item.deliveryDate ? "Due: "+item.deliveryDate : ""].filter(Boolean).join(" · ");
+    client.append(name,email,details);
+    const type = document.createElement("td"); type.textContent = item.enquiryType;
+    const service = document.createElement("td");
+    const serviceName = document.createElement("strong"); serviceName.textContent = item.service;
+    const description = document.createElement("span"); description.className = "student-email"; description.textContent = item.details;
+    service.append(serviceName,description);
+    const state = document.createElement("td");
+    const badge = document.createElement("span"); badge.className = "status enquiry-status"; badge.textContent = item.status; state.append(badge);
+    const date = document.createElement("td"); date.textContent = dateLabel(item.createdAt);
+    const action = document.createElement("td");
+    const select = document.createElement("select");
+    select.className = "enquiry-status-select";
+    ["New","Contacted","Quoted","Accepted","Declined"].forEach((value) => {
+      const option = document.createElement("option"); option.value = value; option.textContent = value;
+      option.selected = item.status === value; select.append(option);
+    });
+    select.addEventListener("change", () => updateEnquiryStatus(item, select.value));
+    action.append(select);
+    tr.append(client,type,service,state,date,action);
+    enquiryRows.append(tr);
+  });
+}
+async function updateEnquiryStatus(item, nextStatus) {
+  try {
+    const result = await api("/enquiries/" + encodeURIComponent(item._id) + "/status", {
+      method:"PATCH", body:JSON.stringify({status:nextStatus})
+    });
+    setMessage(dashboardMessage, result.message);
+    await loadEnquiries();
+  } catch (error) {
+    setMessage(dashboardMessage, error.message);
+  }
+}
+if (enquirySearch) enquirySearch.addEventListener("input", renderEnquiries);
+if (enquiryStatusFilter) enquiryStatusFilter.addEventListener("change", renderEnquiries);
+const enquiryRefresh = document.getElementById("enquiry-refresh");
+if (enquiryRefresh) enquiryRefresh.addEventListener("click", loadEnquiries);
+
 const passwordInput = document.getElementById("password");
 const togglePasswordButton = document.getElementById("toggle-password");
 togglePasswordButton.addEventListener("click", () => {
