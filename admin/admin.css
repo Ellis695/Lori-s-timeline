@@ -52,3 +52,12 @@ button{min-height:42px}
   #logout-button{align-self:flex-end}
 }
 
+
+.dashboard-tabs{display:flex;gap:9px;margin:22px 0 16px;flex-wrap:wrap}
+.dashboard-tab{background:transparent;color:var(--muted);border:1px solid var(--line);padding:11px 16px}
+.dashboard-tab.active{background:var(--pink);border-color:var(--pink);color:#24171c}
+.enquiry-status-select{max-width:130px;background:#171214;border:1px solid #68535d;color:var(--white);border-radius:8px;padding:9px;font:inherit}
+.enquiry-status{background:#453514;color:var(--gold)}
+#enquiries-panel table{min-width:900px}
+#enquiries-panel td{max-width:260px;overflow-wrap:anywhere}
+#enquiries-panel td:nth-child(3){min-width:180px}
