@@ -1,6 +1,7 @@
 const express = require("express");
 const crypto = require("crypto");
 const Registration = require("../models/Registration");
+const Enquiry = require("../models/Enquiry");
 const emailTransporter = require("../config/email");
 
 const router = express.Router();
@@ -129,6 +130,38 @@ Lori's Timeline Team`;
   } catch (error) {
     console.error("Admin status update error:", error.message);
     res.status(500).json({ message: "Could not update registration status." });
+  }
+});
+
+
+router.get("/enquiries", requireAdmin, async (req, res) => {
+  try {
+    const enquiries = await Enquiry.find({})
+      .select("name email phone enquiryType service details budget deliveryDate status createdAt updatedAt")
+      .sort({ createdAt: -1 })
+      .lean();
+    res.json({ total: enquiries.length, enquiries });
+  } catch (error) {
+    console.error("Admin enquiries error:", error.message);
+    res.status(500).json({ message: "Could not load enquiries." });
+  }
+});
+
+router.patch("/enquiries/:id/status", requireAdmin, async (req, res) => {
+  try {
+    const allowed = ["New", "Contacted", "Quoted", "Accepted", "Declined"];
+    const status = req.body && req.body.status;
+    if (!allowed.includes(status)) {
+      return res.status(400).json({ message: "Choose a valid enquiry status." });
+    }
+    const enquiry = await Enquiry.findByIdAndUpdate(
+      req.params.id, { status }, { new: true, runValidators: true }
+    );
+    if (!enquiry) return res.status(404).json({ message: "Enquiry not found." });
+    res.json({ message: "Enquiry status updated.", status: enquiry.status });
+  } catch (error) {
+    console.error("Admin enquiry status error:", error.message);
+    res.status(500).json({ message: "Could not update enquiry status." });
   }
 });
 
