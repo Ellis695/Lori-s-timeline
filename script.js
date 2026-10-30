@@ -31,7 +31,7 @@ if (contactForm) {
 
     const formData = new FormData(contactForm);
     const detailsText = String(formData.get("details") || "").trim();
-    const wordCount = detailsText.split(/\\s+/).filter(Boolean).length;
+    const wordCount = detailsText.split(/\s+/).filter(Boolean).length;
     if (wordCount < 5) {
       detailsInput.setCustomValidity("Please describe your project in at least five words.");
       detailsInput.reportValidity();
@@ -39,7 +39,7 @@ if (contactForm) {
     }
     detailsInput.setCustomValidity("");
 
-    const fullName = String(formData.get("name") || "").trim().replace(/\\s+/g, " ");
+    const fullName = String(formData.get("name") || "").trim().replace(/\s+/g, " ");
     if (!/^[A-Za-z]{2,}(?: [A-Za-z]{2,})+$/.test(fullName)) {
       const nameInput = document.getElementById("name");
       nameInput.setCustomValidity("Please enter your first and last name.");
