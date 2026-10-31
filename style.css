@@ -562,7 +562,7 @@ button,.btn{min-height:44px}
 }
 
 
-/* Header brand lockup: give the supplied mark enough visual weight */
+/* Header brand lockup: prominent mark, aligned to the wordmark's cap height */
 .brand {
     display: inline-flex;
     align-items: center;
@@ -573,16 +573,16 @@ button,.btn{min-height:44px}
 
 .brand-logo {
     display: block;
-    width: 60px;
-    height: 60px;
+    width: 76px;
+    height: 76px;
     object-fit: contain;
     object-position: center;
-    flex: 0 0 60px;
+    flex: 0 0 76px;
 }
 
 .brand-name {
     display: inline-block;
-    font-size: 25px;
+    font-size: 27px;
     line-height: 1;
 }
 
@@ -592,12 +592,12 @@ button,.btn{min-height:44px}
     }
 
     .brand-logo {
-        width: 50px;
-        height: 50px;
-        flex-basis: 50px;
+        width: 64px;
+        height: 64px;
+        flex-basis: 64px;
     }
 
     .brand-name {
-        font-size: 22px;
+        font-size: 23px;
     }
 }
