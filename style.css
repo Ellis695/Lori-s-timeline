@@ -560,3 +560,31 @@ button,.btn{min-height:44px}
     flex: 0 0 auto;
   }
 }
+
+
+/* Header brand logo */
+.brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    white-space: nowrap;
+}
+
+.brand-logo {
+    display: block;
+    width: 42px;
+    height: 42px;
+    object-fit: contain;
+    flex: 0 0 auto;
+}
+
+.brand-name {
+    display: inline-block;
+}
+
+@media (max-width: 760px) {
+    .brand-logo {
+        width: 38px;
+        height: 38px;
+    }
+}
