@@ -53,10 +53,20 @@ app.post("/api/contact", async (req, res) => {
   const cleanBudget = typeof budget === "string" ? budget.trim() : "";
   const cleanDeliveryDate = typeof deliveryDate === "string" ? deliveryDate.trim() : "";
   const wordCount = cleanDetails.split(/\s+/).filter(Boolean).length;
+  const phoneLengths = {
+    "+234":10, "+1":10, "+44":10, "+233":9, "+254":9, "+27":9,
+    "+91":10, "+61":9, "+353":9, "+256":9, "+255":9, "+250":9,
+    "+966":9, "+971":9, "+49":10, "+33":9, "+81":10, "+65":8,
+    "+63":10, "+92":10, "+62":10, "+55":11, "+52":10, "+86":11
+  };
+  const phoneMatch = cleanPhone.match(/^(\\+\\d{1,3}) (\\d+)$/);
+  const validPhone = !cleanPhone || Boolean(
+    phoneMatch && phoneLengths[phoneMatch[1]] === phoneMatch[2].length
+  );
 
   if (!/^[A-Za-z]{2,}(?: [A-Za-z]{2,})+$/.test(cleanName) || cleanName.length > 120 ||
       !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail) || cleanEmail.length > 254 ||
-      (cleanPhone && cleanPhone.length > 30) ||
+      (cleanPhone && (cleanPhone.length > 30 || !validPhone)) ||
       !["Request a Quote", "General Project Enquiry"].includes(cleanType) ||
       !cleanProject || cleanProject.length > 120 || wordCount < 5 || cleanDetails.length > 5000 ||
       cleanBudget.length > 100 || cleanDeliveryDate.length > 40) {
