@@ -129,6 +129,8 @@ let enquiries = [];
 function switchDashboardPanel(panelId) {
   document.getElementById("registrations-panel").hidden = panelId !== "registrations-panel";
   document.getElementById("enquiries-panel").hidden = panelId !== "enquiries-panel";
+  document.getElementById("dashboard-section-title").textContent =
+    panelId === "enquiries-panel" ? "Enquiries" : "Registrations";
   document.querySelectorAll(".dashboard-tab").forEach((button) => {
     button.classList.toggle("active", button.dataset.panel === panelId);
   });
@@ -169,16 +171,22 @@ function renderEnquiries() {
     const client = document.createElement("td");
     const name = document.createElement("span"); name.className = "student-name"; name.textContent = item.name;
     const email = document.createElement("span"); email.className = "student-email"; email.textContent = item.email;
-    const details = document.createElement("span"); details.className = "student-email";
-    details.textContent = [item.phone,item.budget ? "Budget: "+item.budget : "",item.deliveryDate ? "Due: "+item.deliveryDate : ""].filter(Boolean).join(" · ");
-    client.append(name,email,details);
+    const phone = document.createElement("span"); phone.className = "student-email"; phone.textContent = item.phone || "Phone not provided";
+    const budget = document.createElement("span"); budget.className = "student-email"; budget.textContent = item.budget ? "Budget: " + item.budget : "";
+    const dueDate = document.createElement("span"); dueDate.className = "student-email"; dueDate.textContent = item.deliveryDate ? "Expected delivery: " + item.deliveryDate : "";
+    client.append(name,email,phone);
+    if (budget.textContent) client.append(budget);
+    if (dueDate.textContent) client.append(dueDate);
     const type = document.createElement("td"); type.textContent = item.enquiryType;
     const service = document.createElement("td");
     const serviceName = document.createElement("strong"); serviceName.textContent = item.service;
     const description = document.createElement("span"); description.className = "student-email"; description.textContent = item.details;
     service.append(serviceName,description);
     const state = document.createElement("td");
-    const badge = document.createElement("span"); badge.className = "status enquiry-status"; badge.textContent = item.status; state.append(badge);
+    const badge = document.createElement("span");
+    badge.className = "status enquiry-status status-" + String(item.status || "new").toLowerCase();
+    badge.textContent = item.status;
+    state.append(badge);
     const date = document.createElement("td"); date.textContent = dateLabel(item.createdAt);
     const action = document.createElement("td");
     const select = document.createElement("select");
