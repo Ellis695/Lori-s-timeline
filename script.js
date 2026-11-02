@@ -31,13 +31,13 @@ if (contactForm) {
   function syncContactPhoneLimit() {
     const length = contactPhoneLength();
     contactPhone.maxLength = length;
-    contactPhone.placeholder = `Enter ${length} digits`;
-    contactPhoneHelp.textContent = `Optional. Enter exactly ${length} digits for the selected country.`;
+    contactPhone.placeholder = "Enter " + length + " digits";
+    contactPhoneHelp.textContent = "Optional. Enter exactly " + length + " digits for the selected country.";
   }
 
   syncContactPhoneLimit();
   contactPhone.addEventListener("input", () => {
-    contactPhone.value = contactPhone.value.replace(/\\D/g, "").slice(0, contactPhoneLength());
+    contactPhone.value = contactPhone.value.replace(/\D/g, "").slice(0, contactPhoneLength());
     contactPhone.setCustomValidity("");
   });
   contactCountry.addEventListener("change", () => {
@@ -75,83 +75,8 @@ if (contactForm) {
 
     const phoneDigits = String(formData.get("phone") || "").trim();
     const countryCode = String(formData.get("countryCode") || "").trim();
-    if (phoneDigits && !new RegExp(`^\\d{${contactPhoneLength()}}
-const year = document.getElementById("year");
-
-if (year) {
-  year.textContent = new Date().getFullYear();
-}
-
-// Lock form controls while a submission is processing or after success.
-function setFormLocked(form, locked) {
-  form.querySelectorAll("input, select, textarea, button").forEach((control) => {
-    control.disabled = locked;
-  });
-  form.setAttribute("aria-busy", String(locked));
-}
-
-// Business enquiries: save to the database and notify Lori by email.
-const contactForm = document.getElementById("contact-form");
-
-if (contactForm) {
-  let contactSubmitted = false;
-  let contactSending = false;
-  const detailsInput = document.getElementById("details");
-  const contactPhone = document.getElementById("contact-phone-number");
-  const contactCountry = document.getElementById("contact-country-code");
-  const contactPhoneHelp = document.getElementById("contact-phone-help");
-
-  function contactPhoneLength() {
-    return Number(contactCountry.selectedOptions[0].dataset.length);
-  }
-
-  function syncContactPhoneLimit() {
-    const length = contactPhoneLength();
-    contactPhone.maxLength = length;
-    contactPhone.placeholder = `Enter ${length} digits`;
-    contactPhoneHelp.textContent = `Optional. Enter exactly ${length} digits for the selected country.`;
-  }
-
-  syncContactPhoneLimit();
-  contactPhone.addEventListener("input", () => {
-    contactPhone.value = contactPhone.value.replace(/\\D/g, "").slice(0, contactPhoneLength());
-    contactPhone.setCustomValidity("");
-  });
-  contactCountry.addEventListener("change", () => {
-    contactPhone.value = "";
-    contactPhone.setCustomValidity("");
-    syncContactPhoneLimit();
-  });
-
-  if (detailsInput) {
-    detailsInput.addEventListener("input", () => detailsInput.setCustomValidity(""));
-  }
-
-  contactForm.addEventListener("submit", async (event) => {
-    event.preventDefault();
-    if (contactSubmitted || contactSending || !contactForm.reportValidity()) return;
-
-    const formData = new FormData(contactForm);
-    const detailsText = String(formData.get("details") || "").trim();
-    const wordCount = detailsText.split(/\s+/).filter(Boolean).length;
-    if (wordCount < 5) {
-      detailsInput.setCustomValidity("Please describe your project in at least five words.");
-      detailsInput.reportValidity();
-      return;
-    }
-    detailsInput.setCustomValidity("");
-
-    const fullName = String(formData.get("name") || "").trim().replace(/\s+/g, " ");
-    if (!/^[A-Za-z]{2,}(?: [A-Za-z]{2,})+$/.test(fullName)) {
-      const nameInput = document.getElementById("name");
-      nameInput.setCustomValidity("Please enter your first and last name.");
-      nameInput.reportValidity();
-      return;
-    }
-    document.getElementById("name").setCustomValidity("");
-
-).test(phoneDigits)) {
-      contactPhone.setCustomValidity(`Enter exactly ${contactPhoneLength()} digits for the selected country.`);
+    if (phoneDigits && phoneDigits.length !== contactPhoneLength()) {
+      contactPhone.setCustomValidity("Enter exactly " + contactPhoneLength() + " digits for the selected country.");
       contactPhone.reportValidity();
       return;
     }
@@ -160,7 +85,7 @@ if (contactForm) {
     const payload = {
       name: fullName,
       email: String(formData.get("email") || "").trim(),
-      phone: phoneDigits ? `${countryCode} ${phoneDigits}` : "",
+      phone: phoneDigits ? countryCode + " " + phoneDigits : "",
       enquiryType: String(formData.get("enquiryType") || "").trim(),
       project: String(formData.get("project") || "").trim(),
       details: detailsText,
