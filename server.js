@@ -59,7 +59,7 @@ app.post("/api/contact", async (req, res) => {
     "+966":9, "+971":9, "+49":10, "+33":9, "+81":10, "+65":8,
     "+63":10, "+92":10, "+62":10, "+55":11, "+52":10, "+86":11
   };
-  const phoneMatch = cleanPhone.match(/^(\\+\\d{1,3}) (\\d+)$/);
+  const phoneMatch = cleanPhone.match(/^(\+\d{1,3}) (\d+)$/);
   const validPhone = !cleanPhone || Boolean(
     phoneMatch && phoneLengths[phoneMatch[1]] === phoneMatch[2].length
   );
