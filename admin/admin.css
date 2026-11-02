@@ -61,3 +61,33 @@ button{min-height:42px}
 #enquiries-panel table{min-width:900px}
 #enquiries-panel td{max-width:260px;overflow-wrap:anywhere}
 #enquiries-panel td:nth-child(3){min-width:180px}
+
+
+/* Enquiry pipeline status colours */
+.enquiry-status.status-new {
+  background: #263b55;
+  color: #9dc8ff;
+}
+.enquiry-status.status-contacted {
+  background: #493a1c;
+  color: #ffd477;
+}
+.enquiry-status.status-quoted {
+  background: #3d2d58;
+  color: #d0b2ff;
+}
+.enquiry-status.status-accepted {
+  background: #123b2d;
+  color: #65e2ad;
+}
+.enquiry-status.status-declined {
+  background: #512522;
+  color: #ff9188;
+}
+
+/* Keep client contact details in a clear, predictable vertical order */
+#enquiries-panel td:first-child .student-email {
+  display: block;
+  margin-top: 5px;
+  line-height: 1.45;
+}
