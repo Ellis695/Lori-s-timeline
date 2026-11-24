@@ -6,7 +6,7 @@
     --pink3: #E9A2C8;
     --ink: #29252a;
     --muted: #716970;
-    --plum: #C2187A;
+    --plum: #C30253;
     --line: #F0D4E3;
 }
 
@@ -78,7 +78,7 @@ h1 span {
 }
 
 .btn:hover {
-    background: #9D155F;
+    background: #C30253;
     transform: translateY(-1px);
 }
 
@@ -229,7 +229,7 @@ h3 {
     border: 1px solid var(--line);
     border-radius: 24px;
     background: white;
-    box-shadow: 0 18px 55px #C2187A12;
+    box-shadow: 0 18px 55px #C3025312;
 }
 
 .field {
@@ -547,7 +547,7 @@ button,.btn{min-height:44px}
 }
 .navlinks a.nav-cta:hover,
 .navlinks a.nav-cta:focus-visible {
-  background: #9D155F;
+  background: #C30253;
   color: #fff;
 }
 @media (max-width: 760px) {
